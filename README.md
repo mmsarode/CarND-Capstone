@@ -2,9 +2,13 @@
 Team: NightKings
 
 George Sakr	ges07.aub@gmail.com	@Geo
+
 Ansgar Nell	ansgar.nell@gmail.com	@ska1ix
+
 Mahesh Sarode	mmsarode@mtu.edu	@mmsarode
+
 Subhash Gopalakrishnan	subhashgo@gmail.com	@subhash
+
 Tamas Halbrucker	alszik@gmail.com	@alszik
 
 
