@@ -6,6 +6,7 @@ from dbw_mkz_msgs.msg import ThrottleCmd, SteeringCmd, BrakeCmd, SteeringReport
 from geometry_msgs.msg import TwistStamped
 import math
 
+
 from twist_controller import Controller
 
 '''
@@ -55,10 +56,34 @@ class DBWNode(object):
 
         # TODO: Create `TwistController` object
         # self.controller = TwistController(<Arguments you wish to provide>)
+        self.controller = Controller(brake_deadband, decel_limit, accel_limit, wheel_base, steer_ratio,
+            max_lat_accel, max_steer_angle)
 
         # TODO: Subscribe to all the topics you need to
+        rospy.Subscriber('/current_velocity', TwistStamped, self.current_twist_cb)
+        rospy.Subscriber('/twist_cmd', TwistStamped, self.desired_twist_cb)
+        rospy.Subscriber('/vehicle/dbw_enabled', Bool, self.dbw_enabled_cb)
+
+
+        self.dbw_enabled = None
+        self.current_twist = None
+        self.desired_twist = None
+
+        # self.controller_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
+
 
         self.loop()
+
+    def dbw_enabled_cb(self, msg): #msg: Bool
+        self.dbw_enabled = msg
+
+
+    def desired_twist_cb(self, msg):
+        # self.desired_vel = msg.twist.linear.x
+        self.desired_twist = msg.twist
+
+    def current_twist_cb(self, msg):
+        self.current_twist = msg.twist
 
     def loop(self):
         rate = rospy.Rate(50) # 50Hz
@@ -72,6 +97,18 @@ class DBWNode(object):
             #                                                     <any other argument you need>)
             # if <dbw is enabled>:
             #   self.publish(throttle, brake, steer)
+            dt = 1.0/50
+            
+
+            if self.dbw_enabled and self.current_twist and self.desired_twist :
+
+                throttle_cmd, brake_cmd, steer_angle =  self.controller.control(self.desired_twist, self.current_twist, dt)
+                self.publish(throttle_cmd, brake_cmd, steer_angle)
+                # self.throttle_pub.publish('/vehicle/throttle_cmd', throttle)
+                # self.brake_pub.publish('/vehicle/brake_cmd', brake)
+                # self.steer_pub.publish('/vehicle/steering_cmd', steering)
+
+
             rate.sleep()
 
     def publish(self, throttle, brake, steer):
