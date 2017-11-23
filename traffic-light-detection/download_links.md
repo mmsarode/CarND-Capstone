@@ -1,15 +1,13 @@
 A. Tool used to label images, labelImg https://github.com/tzutalin/labelImg
 
 
-B. Scripts for tfrecord:       
+B. Scripts for tfrecord: Source: https://github.com/datitran/raccoon_dataset    
 
-   Source: https://github.com/datitran/raccoon_dataset 
+   * Files used: 
 
-      * Files used 
+   1. xml\_to\_csv.py 
 
-      1. xml\_to\_csv.py 
-
-      2. generate\_tfrecord.py
+   2. generate\_tfrecord.py
 
 
 C. Stop sign labeled dataset: 
